@@ -1,6 +1,6 @@
 # Lúmen Reader — PWA pessoal (v1.1)
 
-Leitor **mobile-first** para iPhone 15 e Android, desenvolvido em HTML, CSS e JavaScript puro. O aplicativo usa **PDF.js**, **IndexedDB** e **Service Worker**; não requer conta.
+Leitor **mobile-first** para iPhone e Android, desenvolvido em HTML, CSS e JavaScript puro. O aplicativo usa **PDF.js**, **IndexedDB** e **Service Worker**; não requer conta.
 
 ## Correção v1.1 (layout)
 
