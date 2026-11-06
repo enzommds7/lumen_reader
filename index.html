@@ -1,1 +1,81 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#15191d"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><title>Lúmen Reader</title><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon.png"><link rel="stylesheet" href="style.css"></head><body><main id="app"><header><div><small>MINHA BIBLIOTECA</small><h1>Lúmen<span>.</span></h1></div><button id="importBtn" class="primary">+ Livro</button><input id="file" type="file" accept="application/pdf,.pdf" hidden></header><section id="library"><p class="muted">Seus livros ficam neste dispositivo.</p><div id="books"></div></section><section id="reader" hidden><div class="toolbar"><button id="back">← Biblioteca</button><strong id="bookTitle"></strong><button id="delete" title="Excluir livro">Excluir</button></div><div class="settings"><select id="mode"><option value="text">Leitura adaptável</option><option value="pdf">PDF original</option></select><select id="theme"><option value="sepia">Sépia</option><option value="light">Claro</option><option value="dark">Escuro</option></select><button id="smaller">A−</button><button id="larger">A+</button></div><article id="page" tabindex="0"></article><footer><button id="prev">← Anterior</button><span id="position"></span><button id="next">Próximo →</button></footer><p id="notice" class="muted"></p></section></main><script type="module" src="app.js"></script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#14231f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Lúmen">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="Seu espaço de leitura. PDFs, marcações e anotações salvos no seu aparelho.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./assets/icon-180.png">
+  <link rel="icon" type="image/svg+xml" href="./assets/icon.svg">
+  <link rel="stylesheet" href="./style.css">
+  <title>Lúmen — Meu espaço de leitura</title>
+</head>
+<body>
+<div id="app">
+  <section id="libraryView" class="view library-view">
+    <header class="library-header">
+      <div class="brand"><span class="brand-symbol">◈</span><span>LÚMEN<span class="brand-dot">.</span></span></div>
+      <button class="icon-button" id="infoButton" type="button" title="Sobre e backup" aria-label="Sobre e backup">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></svg>
+      </button>
+    </header>
+    <div class="library-scroll">
+      <section class="hero">
+        <p class="eyebrow">UM LUGAR PARA SUAS HISTÓRIAS</p>
+        <h1>Sua próxima<br><em>boa leitura.</em></h1>
+        <p class="hero-copy">Seus livros, suas ideias e seus melhores trechos. Tudo no seu dispositivo.</p>
+        <button type="button" class="button button-gold" id="addBookBtn"><span class="button-plus">＋</span> Adicionar livro</button>
+        <div class="hero-decoration" aria-hidden="true"><div class="book-shape bs1"></div><div class="book-shape bs2"></div><div class="book-shape bs3"></div></div>
+      </section>
+      <section class="shelf">
+        <div class="section-line"><div><p class="eyebrow dark-eyebrow">SUA ESTANTE</p><h2>Minha biblioteca <span class="count" id="bookCount">0</span></h2></div><button id="libraryMenu" class="text-button" type="button">Importar <span aria-hidden="true">＋</span></button></div>
+        <div id="booksGrid" class="books-grid"></div>
+        <div id="libraryEmpty" class="empty" hidden><div class="empty-illustration">📖</div><strong>Sua biblioteca começa aqui</strong><p>Importe um PDF do Arquivos ou cole um link público para começar.</p><button id="emptyAdd" class="button button-outline" type="button">Importar primeiro livro</button><button id="demoButton" class="demo-link" type="button">Ou experimentar um livro de demonstração →</button></div>
+      </section>
+      <div class="privacy-line"><span>✦</span> Seus arquivos e suas anotações ficam neste aparelho</div>
+    </div>
+  </section>
+
+  <section id="readerView" class="view reader-view" hidden>
+    <header class="reader-header">
+      <button id="backButton" class="icon-button" aria-label="Voltar à biblioteca" type="button"><svg viewBox="0 0 24 24"><path d="m14 5-7 7 7 7"/></svg></button>
+      <div class="reader-book"><span id="readerBookTitle">Livro</span><small id="readerMeta">Modo leitura</small></div>
+      <button id="bookmarkButton" class="icon-button" type="button" aria-label="Marcar página" title="Marcar página"><svg viewBox="0 0 24 24"><path d="M6 4h12v17l-6-4-6 4z"/></svg></button>
+      <button id="readerMenuButton" class="icon-button" type="button" aria-label="Configurações" title="Configurações"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg></button>
+    </header>
+    <div class="reader-controls">
+      <div class="segmented" role="group" aria-label="Modo de leitura"><button class="active" id="reflowMode" type="button">Aa Adaptável</button><button id="pdfMode" type="button">▤ PDF original</button></div>
+      <button id="showNotesButton" class="notes-open" type="button" title="Destaques e anotações" aria-label="Destaques e anotações"><svg viewBox="0 0 24 24"><path d="M7 4h10v16H7zM10 9h4M10 13h4"/></svg><span id="annotationCount">0</span></button>
+    </div>
+    <div class="reading-stage" id="readingStage">
+      <div id="textPaper" class="text-paper" hidden>
+        <div class="page-inner"><div id="textPage" class="book-text"></div><div id="measurePage" class="book-text measure-page" aria-hidden="true"></div></div>
+      </div>
+      <div id="pdfPaper" class="pdf-paper" hidden><div id="pdfSheet" class="pdf-sheet"><canvas id="pdfCanvas"></canvas><div id="pdfHighlights" class="pdf-highlights"></div><div id="pdfTextLayer" class="textLayer"></div></div></div>
+      <div id="readingLoading" class="reading-loading" hidden><div class="loader"></div><strong id="loadingTitle">Preparando o livro…</strong><span id="loadingProgress">Isso pode levar um momento</span></div>
+    </div>
+    <div id="selectionTools" class="selection-tools" hidden><div class="selection-caption">Marcar trecho</div><div class="colors"><button class="color-dot active" data-color="yellow" style="--dot:#F5CF65" aria-label="Amarelo" type="button"></button><button class="color-dot" data-color="green" style="--dot:#B9D5B4" aria-label="Verde" type="button"></button><button class="color-dot" data-color="blue" style="--dot:#A9CAE8" aria-label="Azul" type="button"></button><button class="color-dot" data-color="pink" style="--dot:#E9B2C1" aria-label="Rosa" type="button"></button></div><button id="saveHighlight" class="mini-action" type="button">Destacar</button><button id="highlightAndNote" class="mini-action" type="button">+ Nota</button><button id="closeSelection" class="close-small" type="button" aria-label="Fechar">×</button></div>
+    <footer class="reader-footer"><div class="progress-row"><span id="progressLabel">Página 1</span><span id="progressPercent">0%</span></div><div class="progress-track"><div id="progressBar"></div></div><div class="reader-navigation"><button id="prevButton" type="button" aria-label="Página anterior"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg><span>Anterior</span></button><div class="page-counter" id="pageCounter">1 / 1</div><button id="nextButton" type="button" aria-label="Próxima página"><span>Próxima</span><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button></div></footer>
+  </section>
+</div>
+
+<input type="file" id="pdfFileInput" accept=".pdf,application/pdf" multiple hidden>
+<input type="file" id="backupInput" accept=".json,application/json" hidden>
+
+<dialog id="importDialog" class="app-dialog"><div class="dialog-head"><div><p class="eyebrow dark-eyebrow">ADICIONAR À BIBLIOTECA</p><h2>Um novo livro</h2></div><button type="button" class="dismiss" data-close="importDialog" aria-label="Fechar">×</button></div><p>Importe um PDF do aparelho ou cole o endereço de um PDF ou de uma página que o disponibilize.</p><button class="import-option" id="pickFileButton" type="button"><span class="option-icon">↑</span><span><strong>Escolher PDF</strong><small>Do app Arquivos do iPhone</small></span><span class="right-chevron">›</span></button><form id="urlForm" class="url-form"><label for="urlInput">IMPORTAR POR LINK</label><input type="url" id="urlInput" placeholder="https://exemplo.com/livro" autocapitalize="off" autocomplete="off" spellcheck="false" required><button class="button button-dark" type="submit" id="urlSubmit">Buscar e importar</button><p id="urlError" class="import-error" hidden></p></form><p class="dialog-footnote">Links públicos podem exigir um servidor auxiliar. Downloads com login ou DRM não são suportados.</p></dialog>
+
+<dialog id="settingsDialog" class="app-dialog"><div class="dialog-head"><div><p class="eyebrow dark-eyebrow">PERSONALIZAR</p><h2>Sua leitura</h2></div><button class="dismiss" data-close="settingsDialog" aria-label="Fechar" type="button">×</button></div><div class="setting-row"><div><strong>Fonte</strong><small>Somente na leitura adaptável</small></div><div class="font-actions"><button id="fontSmaller" type="button">A−</button><span id="fontValue">19</span><button id="fontLarger" type="button">A+</button></div></div><div class="setting-col"><strong>Cor das páginas</strong><div class="theme-options"><button class="theme-option" data-theme="light" type="button"><i class="theme-light"></i>Claro</button><button class="theme-option active" data-theme="sepia" type="button"><i class="theme-sepia"></i>Sépia</button><button class="theme-option" data-theme="dark" type="button"><i class="theme-dark"></i>Escuro</button></div></div><button id="addStandaloneNote" type="button" class="import-option"><span class="option-icon">✎</span><span><strong>Anotar página atual</strong><small>Guarde um pensamento</small></span><span class="right-chevron">›</span></button><button id="deleteBookButton" class="danger-link" type="button">Remover este livro da biblioteca</button></dialog>
+
+<dialog id="annotationsDialog" class="app-dialog annotations-dialog"><div class="dialog-head"><div><p class="eyebrow dark-eyebrow">SEU CADERNO</p><h2>Destaques e favoritos</h2></div><button type="button" class="dismiss" data-close="annotationsDialog" aria-label="Fechar">×</button></div><div class="annotation-filters"><button data-filter="all" class="active" type="button">Todos</button><button data-filter="highlight" type="button">Destaques</button><button data-filter="bookmark" type="button">Favoritos</button><button data-filter="note" type="button">Notas</button></div><div id="annotationList" class="annotation-list"></div><button id="exportMarkdown" class="button button-outline" type="button">↓ Exportar anotações (.md)</button></dialog>
+
+<dialog id="noteDialog" class="app-dialog"><div class="dialog-head"><div><p class="eyebrow dark-eyebrow">REGISTRAR UMA IDEIA</p><h2>Minha anotação</h2></div><button type="button" class="dismiss" data-close="noteDialog" aria-label="Fechar">×</button></div><p id="noteQuote" class="note-quote" hidden></p><form id="noteForm"><label class="note-label" for="noteInput">O QUE VOCÊ PENSOU?</label><textarea id="noteInput" rows="5" placeholder="Escreva sua reflexão aqui..." required></textarea><button class="button button-dark" type="submit">Salvar anotação</button></form></dialog>
+
+<dialog id="aboutDialog" class="app-dialog"><div class="dialog-head"><div><p class="eyebrow dark-eyebrow">SOBRE O LÚMEN</p><h2>Seu espaço é seu.</h2></div><button class="dismiss" data-close="aboutDialog" aria-label="Fechar" type="button">×</button></div><p>O Lúmen guarda livros e anotações no IndexedDB deste dispositivo. Não há conta ou sincronização nesta versão.</p><div class="warning-note"><strong>Importante sobre backups</strong><p>O iOS pode apagar dados de sites em algumas situações. Exporte um backup regularmente e mantenha os PDFs originais.</p></div><button id="backupButton" class="button button-dark" type="button">↓ Fazer backup completo (.json)</button><button id="restoreButton" class="button button-outline" type="button">↑ Restaurar backup</button><p class="dialog-footnote">O backup inclui os PDFs e pode ser grande. Restaurar adiciona os livros presentes no arquivo sem apagar os atuais.</p></dialog>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script type="module" src="./js/app.js"></script>
+</body>
+</html>

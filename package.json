@@ -1,0 +1,15 @@
+{
+  "name": "lumen-reader",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "PWA privado para leitura de PDFs com destaques, notas e importação por URL",
+  "scripts": {
+    "start": "node server/server.mjs",
+    "dev": "node server/server.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
